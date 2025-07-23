@@ -16,7 +16,7 @@ spec:
       containers:
       - name: foundation
     # enter the path to your image, be sure to include the correct region prefix    
-        image: us-ashburn-1.ocir.io/ocuocictrng31/us-ashburn-1-dop-1-ocir-1/oci_sample_webapp_<yourName>:latest
+        image: us-ashburn-1.ocir.io/ocuocictrng31/us-ashburn-1-dop-1-ocir-1/oci_sample_webapp_<yourName>:${BUILDRUN_HASH}
         ports:
         - containerPort: 80
       imagePullSecrets:
