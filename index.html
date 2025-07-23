@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🚀 Catch the Rocket Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: radial-gradient(circle at center, #222, #111);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px;
+      font-size: 2.5rem;
+      color: #f5f5f5;
+    }
+
+    #scoreBoard, #timer {
+      position: absolute;
+      top: 10px;
+      font-size: 1.2rem;
+      background-color: rgba(255,255,255,0.1);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    #scoreBoard {
+      left: 20px;
+    }
+
+    #timer {
+      right: 20px;
+    }
+
+    #rocket {
+      position: absolute;
+      font-size: 3rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+
+    #rocket:active {
+      transform: scale(1.3);
+    }
+
+    #gameOver {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: none;
+      z-index: 999;
+    }
+
+    #gameOver h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    #restartBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #ff9800;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #restartBtn:hover {
+      background-color: #ffc107;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #ffffffa0;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 Catch the Rocket!</h1>
+  <div id="scoreBoard">Score: 0</div>
+  <div id="timer">Time: 60s</div>
+  <div id="rocket">🚀</div>
+
+  <div id="gameOver">
+    <h2>🎉 Game Over!</h2>
+    <p>Your final score: <span id="finalScore">0</span></p>
+    <button id="restartBtn">Play Again</button>
+  </div>
+
+  <footer>Built with ❤️ for fun and learning!</footer>
+
+  <script>
+    const rocket = document.getElementById("rocket");
+    const scoreBoard = document.getElementById("scoreBoard");
+    const timerDisplay = document.getElementById("timer");
+    const gameOver = document.getElementById("gameOver");
+    const finalScore = document.getElementById("finalScore");
+    const restartBtn = document.getElementById("restartBtn");
+
+    let score = 0;
+    let timeLeft = 60;
+    let rocketSpeed = 1000;
+    let rocketInterval;
+    let countdownInterval;
+
+    function moveRocket() {
+      const maxX = window.innerWidth - 60;
+      const maxY = window.innerHeight - 60;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      rocket.style.left = `${x}px`;
+      rocket.style.top = `${y}px`;
+    }
+
+    function updateScore() {
+      score++;
+      scoreBoard.textContent = `Score: ${score}`;
+      moveRocket();
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerDisplay.textContent = `Time: ${timeLeft}s`;
+
+      if (timeLeft % 10 === 0 && rocketSpeed > 400) {
+        rocketSpeed -= 100;
+        restartRocketMovement();
+      }
+
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 60;
+      rocketSpeed = 1000;
+      scoreBoard.textContent = `Score: 0`;
+      timerDisplay.textContent = `Time: 60s`;
+      gameOver.style.display = 'none';
+      moveRocket();
+
+      countdownInterval = setInterval(updateTimer, 1000);
+      rocketInterval = setInterval(moveRocket, rocketSpeed);
+    }
+
+    function restartRocketMovement() {
+      clearInterval(rocketInterval);
+      rocketInterval = setInterval(moveRocket, rocketSpeed);
+    }
+
+    function endGame() {
+      clearInterval(countdownInterval);
+      clearInterval(rocketInterval);
+      finalScore.textContent = score;
+      gameOver.style.display = 'block';
+      rocket.style.display = 'none';
+    }
+
+    rocket.addEventListener("click", updateScore);
+    restartBtn.addEventListener("click", () => {
+      rocket.style.display = 'block';
+      startGame();
+    });
+
+    startGame();
+  </script>
+
+</body>
+</html>
